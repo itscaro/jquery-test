@@ -4,7 +4,9 @@
         <script src="js/jquery-1.9.1.js"></script>
         <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
         <script src="js/app.js"></script>
-        <link rel="stylesheet" href="js/ui-lightness/jquery-ui-1.10.2.custom.css">
+        <script src="js/grid.js"></script>
+        <script src="js/widget.js"></script>
+        <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.2.custom.css">
         <style>
         body { min-width: 520px; }
         .column {float: left; padding-bottom: 100px; }
@@ -19,16 +21,17 @@
     <body>
         <a id="addColumn" href="#">+ Column</a>
         <a id="removeColumn" href="#">- Column</a>
+        <a id="addPortlet" href="#">addPortlet</a>
 
     <hr/>
     <div class="column">
      
-      <div class="portlet">
+      <div class="portlet" data-portlet-id="1">
         <div class="portlet-header">Feeds</div>
         <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
       </div>
      
-      <div class="portlet">
+      <div class="portlet" data-portlet-id="2">
         <div class="portlet-header">News</div>
         <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
       </div>
@@ -37,7 +40,7 @@
      
     <div class="column">
      
-      <div class="portlet">
+      <div class="portlet" data-portlet-id="3">
         <div class="portlet-header">Shopping</div>
         <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
       </div>
@@ -46,12 +49,12 @@
      
     <div class="column">
      
-      <div class="portlet">
+      <div class="portlet" data-portlet-id="4">
         <div class="portlet-header">Links</div>
         <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
       </div>
      
-      <div class="portlet">
+      <div class="portlet" data-portlet-id="5">
         <div class="portlet-header">Images</div>
         <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
       </div>
