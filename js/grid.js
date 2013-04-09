@@ -1,21 +1,45 @@
 var GridClass = function(selector) {
     this.selector = selector;
-    this.selectorColumn = ".column";
+    this.selectorHolder = ".portlet-holder";
+    this.selectorColumn = ".portlet-column";
+    this.selectorStore = ".portlet-store";
     this.selectorPortlet = ".portlet";
-    this.columns;
+    this.selectorPortletStore = "#portlet-store";
     
     /**
      * Init sortable and resize columns
      */
     this.init = function() {
+        var _column =  $( this.selectorColumn );
+        
+        // Store
+        var _store =  $( this.selectorStore );
+        $('.portlet-header, .portlet-content', _store).hide();
+        $('.portlet-icon', _store).show();
+        
         // Columns
-        this.columns = $( this.selectorColumn, this.selector );
+        var _portletHolder = $( this.selectorHolder, this.selector );
         // Connect all columns
-        this.columns.sortable({
-            connectWith: this.selectorColumn
+        _portletHolder.sortable({
+            handle: ".portlet-icon, .portlet-header",
+            connectWith: this.selectorHolder,
+            forcePlaceholderSize: true,
+            forceHelperSize: true,
+            //revert: true, // Animation
         });
-        this.columns.disableSelection();
+        _portletHolder.disableSelection();
         this.resize();
+        
+        _store.on( "sortreceive", function( event, ui ) {
+            console.log("Store.sortreceive", ui);
+            $( ".portlet-header, .portlet-content, .portlet-icon", ui.item ).toggle();
+        } );
+        
+        _column.on( "sortreceive", function( event, ui ) {
+            console.log("Column.sortreceive", ui);
+            $( ".portlet-header, .portlet-content", ui.item ).show();
+            $( ".portlet-icon", ui.item ).hide();
+        } );
         
         // Portlets
         this.initPortlet();
@@ -25,15 +49,17 @@ var GridClass = function(selector) {
      * Resize columns
      */
     this.resize = function() {
-        this.columns.css({
-            width: 100 / this.columns.length + "%"
+        var _column = $( this.selectorColumn, this.selector );
+        _column.css({
+            width: 100 / _column.length + "%"
         });
     };
     
     this.initPortlet = function(selector) {
+        var self = this;
         var _portletSelector = (selector || this.selectorPortlet);
     
-        console.log("initPorlet: " + _portletSelector);
+        //console.log("initPorlet: " + _portletSelector);
 
         $( _portletSelector ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
           .find( ".portlet-header" )
@@ -44,12 +70,14 @@ var GridClass = function(selector) {
           .find( ".portlet-content" );
      
         $( ".portlet-header .ui-icon-closethick", _portletSelector ).unbind('click').click(function() {
-            //this.destroy();
+            $(this).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );
+            $(this).parents( ".portlet:first" ).appendTo(self.selectorStore).find( ".portlet-icon, .portlet-header, .portlet-content" ).toggle();
+            $(self.selectorHolder).sortable( "refresh" );
         });
         
         $( ".portlet-header .ui-icon-minusthick", _portletSelector ).unbind('click').click(function() {
-          $( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );
-          $( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
+          $(this).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" )
+          $(this).parents( ".portlet:first" ).toggleClass( "portlet-minimized" ).find( ".portlet-content" ).toggle();
         });
     };
     
@@ -106,9 +134,10 @@ var GridClass = function(selector) {
      *
      */
     this.toArray = function() {
+        var _column = $( this.selectorColumn, this.selector );
         var _array = [];
         
-        this.columns.each(function(i, e) {
+        _column.each(function(i, e) {
             _array[i] = $( e ).sortable( "toArray", {attribute: "data-porlet-id"} );
         });
         //$('.column').sortable( "serialize", {attribute: "data-porlet-id"})

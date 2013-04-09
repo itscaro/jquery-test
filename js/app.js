@@ -15,6 +15,7 @@ $(function() {
         e.preventDefault();
         Grid.addPortlet(new WidgetClass("My widget"));
     });
+    
   });
   
 var Widgets = []
